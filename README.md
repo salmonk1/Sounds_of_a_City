@@ -1,5 +1,7 @@
 # Noise Complaints in NYC: Which neighborhood is the noisiest (or whiniest?)
 
+![alt text](cap_images/all_complaints_map.png)
+
 ## Table of Contents 
 - Introduction
 - Data Sources
