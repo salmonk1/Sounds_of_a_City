@@ -1,6 +1,7 @@
 # Noise Complaints in NYC: Which neighborhood is the noisiest (or whiniest?)
 
 ![alt text](cap_images/all_complaints_map.png)
+###### Map of New York City showing count of all noise complaints.
 
 ## Table of Contents 
 - Introduction
@@ -54,12 +55,47 @@ Using data from 2016-2020 gave me a workable amount of observations. In order to
 ## Data Wrangling and Exploratory Data Analysis
 
 ### Noise Complaints Data
-The noise complaint data required little cleaning and was ready for EDA. After dropping unnecessary columns, I had 2,199,949 observations (unique complaints) from the last 5 years and 34 features to use to predict sale prices.
+
+The noise complaint data required little cleaning and was ready for EDA. After dropping unnecessary columns, I had 2,199,949 observations (unique complaints) from the last 5 years and 34 features to use to predict sale prices:
+
+![alt text](cap_images/features_list.png)
+<br/><br/>
 
 Residential Complaints and Loud Music/Party had the highest counts and they occurred in the same areas: Upper Manhattan and Central Brooklyn. As you can see from the maps below, noise complaints give a surprisingly detailed picture of the characteristics of a neighbourhood.
 
+<img src="cap_images/complaint_type_totals.png" width="600" height="600">
+
+![alt text](cap_images/descriptor_count.png)
+
+<img src="cap_images/map_most_common_complaints.png" width="1000" height="600">
+
+<br/><br/>
+We'll see later in the 'Model Evaluation' section that construction complaints are a strong indicator of a high priced neighborhood:
+
+<img src="cap_images/construction.png" width="1000" height="500">
+
+<br/><br/>
+The issue of barking dogs seems to be a universal nuisance:
+
+<img src="cap_images/barking_map.png" width="1000" height="500">
+
+<br/><br/>
+The ice cream truck is driving residents crazy in three different neighborhoods. Unfortunately for them, the trucks' songs don't qualify as noise violations as long as they're only playing while the trucks are in motion:
+
+<img src="cap_images/icecreamtruck.png" width="1000" height="500">
+
+<br/><br/>
+There seems to be an issue in the East New York neighbourhood in particular with sound from a house of worship:
+
+<img src="cap_images/house_worship.png" width="1000" height="500">
+<br/><br/>
+
+
 ### Sales Data
 Wrangling the property sales data into a usable condition required a significant amount of attention. I started with one Excel sheet per borough per year and my goal was to filter the information down to the average sale price of a residential unit (this could be a flat or single family house), per postcode per year. I refer to this number as the 'PPU': the price per unit.
+<br/><br/>
+<img src="cap_images/raw_sales_data.png" width="1000" height="500">
+
 
 Each year of sales had to be dealt with separately because the organization of the data varied slightly from year to year. I needed only residential property sales but the data also included sales for properties that were classed as commercial, industrial, and mixed-use, as well as whole blocks of flats, single flats and single-family houses. Using different tax and building class categories, I filtered out everything except residental houses, flat and residential flat blocks which gave me a mix of single unit sales and multi-flat sales. Many single flat sales were incorrectly labelled as containing multiple units and I corrected these by filtering the characters in the addresses of these properties with Regex. When an entire block of flats was sold, ie. a 150-unit apartment building sold for 24 million dollars, I divided the total building price by the number of units to get an estimate of a unit sale. 
 
@@ -68,45 +104,33 @@ Another challenge was dealing with outliers and abnormal transactions. There wer
 In the end, I removed the $0 dollar sales, included all abnormal transactions and kept the outliers and I was left with a price range of $1 to $249 million, a mean of $1.16 million and a median of $642,000. I decided to keep the outliers and abnormal sales because my data was heavily skewed and my range was huge; a single standard deviation was about $2.5 million.  This meant that the usual methods for removing outliers (taking 3 standard deviations from the median/mean, multiplying the IQR by 1.5 or cutting the highest and lowest 10th percentile of values) either extended my range into negative prices or cut off too much of the lower end of my data. I also did not have a systematic method for differentiating between abnormal sales in the first quartile and very inexpensive sales that truly did occur at market rate. For example, when I randomly spot checked sales records below $250,000 by manually researching the property, I found that in the same year there was a market rate sale of a studio flat in the Bronx for $80,000 as well as a sale of a large block of flats in Inwood for $100,000 that was clearly not a typical sale. 
 
 By the time I took the average price per postcode and then used this as the binary or multi-class target in my classifiers (ie. if the price was high/low or if the price fell into one of four categories) the effect of including these records was negligible.
+<br/><br/>
+![alt text](cap_images/ppu_histogram.png)
+<br/><br/>
 
+![alt text](cap_images/medianppu_zip.png)
+<br/><br/>
 
 ## Feature Engineering
 
 After running a Chi-Square test, I confirmed that I had multicollinearity between features, as expected. I dealt with this by condensing similar features into single categories. For example, ‘car/truck music’, ‘car/truck honking’ and ‘engine idling’ were condensed into the single category ‘Vehicle Noise’. In addition to running models on all features together, I divided my features into ‘Complaint Types’ and ‘Descriptors’ and ran models on those individual groups. This did not improve my scores and neither did running PCA. 
-
+<br/><br/>
+![alt text](cap_images/heatmap_condensed_features.png)
+<br/>
+Heatmap of condensed features
+<br/><br/>
 
 
 'Residential Noise' and 'party/music' noise had a clear connection with 'low price'. Unsurprisingly, 'loud talking' and 'street noise' were closely connected, and  'vehicle complaint type' and descriptions of vehicle-related noise were now perfectly correlated.
 
+![alt text](cap_images/heatmap_complaint_types_only.png)
+Heatmap of complaint types only
+<br/><br/>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<br/><br/>
+![alt text](cap_images/heatmap_descriptors_only.png)
+Heatmap of descriptors only
+<br/><br/>
 
 ## Modelling
 
@@ -125,11 +149,8 @@ Later, I changed my target to a multiclass where I categorised the prices as fal
   - Q1    0.246835
   - Q2    0.246835
 
-
-
-
-
-
+![alt text](cap_images/models_scores.png)
+<br/><br/>
 
 
 
@@ -138,23 +159,32 @@ Later, I changed my target to a multiclass where I categorised the prices as fal
 
 
 The logistic regression classifier gave insight into the impact of each coefficient on the target variable. The coefficients with the strongest negative impacts are construction related and they correspond to the likelihood of the median sale price being high. If you look at the maps above of construction noise complaints, you can see that the greatest concentration of construction complaints occur in the most expensive neighbourhoods of Manhattan, like TriBeca, where it is highly profitable to build more real estate.
-
-
-
+<br/><br/>
+<img src="cap_images/log_reg_coeffs_1.png" width="1000" height="500">
+<img src="cap_images/log_reg_coeffs_2.png" width="1000" height="500">
+<br/><br/>
 
 
 
 
 
 Extracting the feature importances from the Decision Tree Classifier confirmed what I already knew: Residential Noise strongly impacts housing prices. This makes intuitive sense because this complaint type comprises over 50% of all complaints.
+<br/><br/>
+![alt text](cap_images/dtc_feat_importance_1.png)
+![alt text](cap_images/dtc_feat_importance_2.png)
+<br/><br/>
 
 ### Confusion Matrix and ROC Curve for Decision Tree Classifier
 
-Label 1 = low price (below median)
+Label 1 = low price (below median) 
+
 Label 2 = high price (above median)
 
-
 This is the breakdown of the model’s correct and incorrect predictions and shows that the model correctly predicts true positives and true negatives the majority of the time.
+<br/><br/>
+![alt text](cap_images/dtc_confusion_matrix_ROC_curve.png)
+
+
 
 
 ## Conclusion & Key Learning
@@ -177,7 +207,7 @@ This is the breakdown of the model’s correct and incorrect predictions and sho
 - Experiment with additional feature engineering
 - Run additional models on only the IQR of sale prices in order to deal with outlier challenges
 - Explore specific clusters of complaints 
-- Calculate the rate of change of property values and use this as the target
+- Calculate the rate of change of property values over a period of years and use this as the target
 
 
 
