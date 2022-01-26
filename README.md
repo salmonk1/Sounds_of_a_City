@@ -63,7 +63,7 @@ The noise complaint data required little cleaning and was ready for EDA. After d
 
 Residential Complaints and Loud Music/Party had the highest counts and they occurred in the same areas: Upper Manhattan and Central Brooklyn. As you can see from the maps below, noise complaints give a surprisingly detailed picture of the characteristics of a neighbourhood.
 
-<img src="cap_images/complaint_type_totals.png" width="600" height="600">
+![alt text](cap_images/complaint_type_totals.png)
 
 ![alt text](cap_images/descriptor_count.png)
 
