@@ -13,6 +13,7 @@
 - Conclusion
 - Limitations
 - Next Steps
+- PART TWO!!!!
 
 ## Libraries
 - Pandas
@@ -23,6 +24,7 @@
 - scikit-learn
 - Matplotlib
 - seaborn
+- TensorFlow
 
 ## Introduction
 
@@ -208,6 +210,29 @@ This is the breakdown of the model’s correct and incorrect predictions and sho
 - Run additional models on only the IQR of sale prices in order to deal with outlier challenges
 - Explore specific clusters of complaints 
 - Calculate the rate of change of property values over a period of years and use this as the target
+
+## PART TWO!!
+January 2023
+I recently returned to this project to address a few obvious next steps that have nagged at me ever since I finished. When I was asked to present my work to colleagues at R2 Factory, Rolls Royce as a new starter, this seemed like the right opportunity to tie up loose ends. 
+
+I wanted to see if I could improve my binary classifier scores with neural networks or any other models that I didn’t have time to try when I was last working on this. I also wanted to see if I could get anything worthwhile out of multiclass classification techniques or if my data really was just too skewed. 
+
+In the end, I determined that unless I go back and re-aggregate my property sales data, I will always have issues with skew that will hold back any attempts at worthwhile multi-class classifications. Maybe someday I’ll do that, but if I was to continue playing around with noise complaints data, I’d rather use it to explore different demographic information. It’s time to put this particular project to bed!
+
+### Findings for binary classifier - XGBoost for the win!
+The baseline XGBoost model gave the best accuracy score of 0.6295. It is slightly higher than XGBoost with Hyperopt with Bayesian Optimisation (0.6293) and my best guess is that this just has something to do with the random sampling of combinations that bayesian optimisation would have started with.
+
+The Keras sequential model did notably worse than the decision tree classifier.
+
+
+### Findings for the multi-class classifier:
+Four classes, split along quartiles. 
+
+Still not great. Things definitely improved from the k-NN score, which is where I left it previously but I found that even after normalising with a box-cox transform, the best model always overpredicted the first quartile. Further below are the test predictions for the baseline Sequential model with 2 layers where you can see the overpredictions. 
+
+
+
+
 
 
 
