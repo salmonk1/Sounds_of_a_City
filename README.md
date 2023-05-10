@@ -223,12 +223,26 @@ In the end, I determined that unless I go back and re-aggregate my property sale
 The baseline XGBoost model gave the best accuracy score of 0.6295. It is slightly higher than XGBoost with Hyperopt with Bayesian Optimisation (0.6293) and my best guess is that this just has something to do with the random sampling of combinations that bayesian optimisation would have started with.
 
 The Keras sequential model did notably worse than the decision tree classifier.
+<br/><br/>
+
+<p float="left">
+  <img src="cap_images/binary_scores_pt2.png" width="50%" />
+  <img src="cap_images/binary_hist_pt2.png" width="70%" /> 
+</p>
 
 
 ### Findings for the multi-class classifier:
 Four classes, split along quartiles. 
 
 Still not great. Things definitely improved from the k-NN score, which is where I left it previously but I found that even after normalising with a box-cox transform, the best model always overpredicted the first quartile. Further below are the test predictions for the baseline Sequential model with 2 layers where you can see the overpredictions. 
+
+<br/><br/>
+![alt text](cap_images/multiclass_scores_pt2.png)
+<img src="cap_images/multi_hist_pt2.png" width="75%" height="450">
+![alt text](cap_images/multiclass_pred_pt2.png)
+![alt text](cap_images/mutliclass_confusion_pt2.png)
+<br/><br/>
+
 
 
 
