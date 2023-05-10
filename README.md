@@ -219,6 +219,11 @@ I wanted to see if I could improve my binary classifier scores with neural netwo
 
 In the end, I determined that unless I go back and re-aggregate my property sales data, I will always have issues with skew that will hold back any attempts at worthwhile multi-class classifications. Maybe someday I’ll do that, but if I was to continue playing around with noise complaints data, I’d rather use it to explore different demographic information. It’s time to put this particular project to bed!
 
+*See the Noise_tensorflow.ipynb for all work with tensorflow for binary and multi-class targets*
+<br/>
+*See the Noise_XGBoost.ipynb for all work with XGBoost modeling for binary and multi-class targets*
+
+
 ### Findings for binary classifier - XGBoost for the win!
 The baseline XGBoost model gave the best accuracy score of 0.6295. It is slightly higher than XGBoost with Hyperopt with Bayesian Optimisation (0.6293) and my best guess is that this just has something to do with the random sampling of combinations that bayesian optimisation would have started with.
 
